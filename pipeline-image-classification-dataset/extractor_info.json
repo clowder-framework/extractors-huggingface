@@ -1,0 +1,30 @@
+{
+  "@context": "http://clowder.ncsa.illinois.edu/contexts/extractors.jsonld",
+  "name": "huggingface.image.classification.dataset",
+  "version": "1.0",
+  "description": "Classify images using HuggingFace's transformer library image-classification task.",
+  "author": "Luigi Marini",
+  "contributors": [
+    "Kastan Day"
+  ],
+  "contexts": [
+    {
+      "predictions": "http://example.org"
+    }
+  ],
+  "repository": [
+    {
+      "repType": "git",
+      "repUrl": "https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
+    }
+  ],
+  "process": {
+    "dataset": [
+      "*"
+    ]
+  },
+  "max_retry": 1,
+  "external_services": [],
+  "dependencies": [],
+  "bibtex": []
+}
