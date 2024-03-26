@@ -1,0 +1,30 @@
+{
+  "@context": "http://clowder.ncsa.illinois.edu/contexts/extractors.jsonld",
+  "name": "huggingface.image.classification.dataset.kuberay",
+  "version": "1.0",
+  "description": "Classify images using HuggingFace's transformer library image-classification task on remote Kubernetes cluster.",
+  "author": "Luigi Marini",
+  "contributors": [
+    "Kastan Day"
+  ],
+  "contexts": [
+    {
+      "predictions": "http://clowder.ncsa.illinois.edu/terms#predictions"
+    }
+  ],
+  "repository": [
+    {
+      "repType": "git",
+      "repUrl": "https://github.com/clowder-framework/pyclowder.git"
+    }
+  ],
+  "process": {
+    "dataset": [
+      "*"
+    ]
+  },
+  "max_retry": 1,
+  "external_services": [],
+  "dependencies": [],
+  "bibtex": []
+}
