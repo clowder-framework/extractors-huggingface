@@ -1,0 +1,10 @@
+pyclowder==3.0.7
+ray[default]==2.12.0
+numpy
+scipy
+pillow
+torch
+torchvision
+transformers
+evaluate
+datasets
