@@ -1,5 +1,4 @@
 pyclowder==3.0.7
-ray[default]==2.12.0
 numpy
 scipy
 pillow
@@ -8,3 +7,6 @@ torchvision
 transformers
 evaluate
 datasets
+transformers[torch]
+scikit-learn
+ray[data,train,tune,serve]
