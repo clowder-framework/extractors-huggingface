@@ -3,6 +3,7 @@
 
 import logging
 import json
+import os
 from typing import Dict
 
 from pyclowder.utils import CheckMessage
@@ -40,6 +41,8 @@ class ClowderSQFinetuningExtractor(Extractor):
         LOCAL_TEST_FILE_ID = ""
         DATA_TYPE = ""
 
+        WANDB_PROJECT_NAME = None
+
         print(f"Parameters: {parameters}")
 
         if 'parameters' in parameters:
@@ -74,6 +77,15 @@ class ClowderSQFinetuningExtractor(Extractor):
             print(f"MODEL_FILE_NAME: {MODEL_FILE_NAME}")
 
 
+        # wandb parameters
+        if 'WANDB_API_KEY' in params:
+            WANDB_API_KEY = params['WANDB_API_KEY']
+            os.environ["WANDB_API_KEY"] = WANDB_API_KEY
+        if 'WANDB_PROJECT_NAME' in params:
+            WANDB_PROJECT_NAME = params['WANDB_PROJECT']
+            os.environ["WANDB_PROJECT"] = WANDB_PROJECT_NAME
+
+
         # Load local files from Clowder
         local_train_file = pyclowder.files.download(connector, host, secret_key,
                                                              fileid=LOCAL_TRAIN_FILE_ID)
@@ -87,6 +99,7 @@ class ClowderSQFinetuningExtractor(Extractor):
                                        local_train_file=local_train_file,
                                        local_test_file=local_test_file,
                                        use_gpu=False,
+                                       wandb_project=WANDB_PROJECT_NAME,
                                        num_workers=1)
         result = finetuner.run()
 
