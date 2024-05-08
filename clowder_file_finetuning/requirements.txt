@@ -9,4 +9,4 @@ evaluate
 datasets
 transformers[torch]
 scikit-learn
-ray[data,train,tune,serve]
+ray

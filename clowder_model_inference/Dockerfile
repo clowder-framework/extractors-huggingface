@@ -27,7 +27,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy only the scripts needed at runtime
-COPY clowder_finetuning.py clowder_finetuning_extractor.py extractor_info.json ./
+COPY clowder_inference.py clowder_model_inference_extractor.py extractor_info.json ./
 
 # Use a second stage to keep only what's necessary
 FROM python:3.9-slim
@@ -38,10 +38,9 @@ WORKDIR /extractor
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=builder /extractor /extractor
 
-
 # Environment variables
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
 # Run the Python script
-CMD ["python3", "-u", "clowder_finetuning_extractor.py", "--max-retry", "1", "--heartbeat", "5", "--connector", "RabbitMQ"]
+CMD ["python3", "-u", "clowder_model_inference_extractor.py", "--max-retry", "1", "--heartbeat", "5", "--connector", "RabbitMQ"]
