@@ -10,3 +10,4 @@ datasets
 transformers[torch]
 scikit-learn
 ray
+wandb
