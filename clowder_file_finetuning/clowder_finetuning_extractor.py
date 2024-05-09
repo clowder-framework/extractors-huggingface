@@ -82,8 +82,8 @@ class ClowderSQFinetuningExtractor(Extractor):
             WANDB_API_KEY = params['WANDB_API_KEY']
             os.environ["WANDB_API_KEY"] = WANDB_API_KEY
         if 'WANDB_PROJECT_NAME' in params:
-            WANDB_PROJECT_NAME = params['WANDB_PROJECT']
-            os.environ["WANDB_PROJECT"] = WANDB_PROJECT_NAME
+            WANDB_PROJECT_NAME = params['WANDB_PROJECT_NAME']
+            print(f"WANDB_PROJECT_NAME: {WANDB_PROJECT_NAME}")
 
 
         # Load local files from Clowder
