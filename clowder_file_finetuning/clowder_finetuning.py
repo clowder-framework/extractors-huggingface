@@ -119,11 +119,12 @@ class ClowderSQFineTuner:
             if self.wandb_project:
                 callbacks.append(WandbLoggerCallback(project=self.wandb_project))
 
-                # Define the running configuration
-                running_config = RunConfig(
-                    callbacks=callbacks,
-                    storage_path= self.ray_storage_path + "ray_results"
-                )
+            # Define the running configuration
+            running_config = RunConfig(
+                callbacks=callbacks,
+                storage_path= self.ray_storage_path + "ray_results"
+            )
+
 
             ray_trainer = TorchTrainer(
                 self.train_func,
