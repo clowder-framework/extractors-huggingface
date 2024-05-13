@@ -2,6 +2,7 @@ import numpy as np
 import evaluate
 from datasets import load_dataset
 import torch
+import os
 from transformers import Trainer, TrainingArguments, AutoModelForSequenceClassification, AutoTokenizer
 import sys
 
@@ -9,6 +10,7 @@ import ray.train.huggingface.transformers
 from ray.train.torch import TorchTrainer
 from ray.train import ScalingConfig, RunConfig
 from ray.air.integrations.wandb import WandbLoggerCallback
+import logging
 
 
 def tokenize_function(examples, tokenizer):
@@ -23,7 +25,7 @@ def compute_metrics(eval_pred):
 
 
 class ClowderSQFineTuner:
-    def __init__(self, model_name, num_labels, data_type, local_train_file, local_test_file,
+    def __init__(self, model_name, num_labels, data_type, local_train_file, local_test_file, ray_storage_path=None,
                  model_file_name="model", num_workers=1, use_gpu=False, wandb_project=None):
 
         self.model_name = model_name
@@ -44,6 +46,15 @@ class ClowderSQFineTuner:
 
         self.train_ref = None
         self.test_ref = None
+
+        if ray_storage_path:
+            self.ray_storage_path = ray_storage_path
+        else:
+            # Default path
+            if not os.path.exists(".clowder_finetuning"):
+                os.makedirs(".clowder_finetuning")
+                os.makedirs(".clowder_finetuning/ray_results")
+            self.ray_storage_path = ".clowder_finetuning/"
 
     def load_dataset(self):
         # Load datasets based on configuration
@@ -71,7 +82,7 @@ class ClowderSQFineTuner:
 
         # Define the training arguments
         training_args = TrainingArguments(
-            output_dir="./results",
+            output_dir= self.ray_storage_path + "./results",
             evaluation_strategy="epoch",
             save_strategy="epoch",
             report_to="none"
@@ -95,50 +106,58 @@ class ClowderSQFineTuner:
         trainer.train()
 
     def run(self):
+        try:
+            self.load_dataset()
 
-        self.load_dataset()
-
-        scaling_config = ScalingConfig(
-            num_workers=self.num_workers,
-            use_gpu=self.use_gpu
-        )
-
-        callbacks = []
-
-        if self.wandb_project:
-            callbacks.append(WandbLoggerCallback(project=self.wandb_project))
-
-        ray_trainer = TorchTrainer(
-            self.train_func,
-            scaling_config=scaling_config,
-            run_config=RunConfig(
-                callbacks=callbacks
+            scaling_config = ScalingConfig(
+                num_workers=self.num_workers,
+                use_gpu=self.use_gpu
             )
-        )
 
-        result = ray_trainer.fit()
-        # Save model
-        best_ckpt = result.get_best_checkpoint(metric="eval_loss", mode="min")
-        with best_ckpt.as_directory() as checkpoint_dir:
-            model = AutoModelForSequenceClassification.from_pretrained(checkpoint_dir+"/checkpoint")
-            filename = self.model_file_name + ".pt"
-            torch.save(model, filename)
+            callbacks = []
 
-        # Stop ray
-        ray.shutdown()
+            if self.wandb_project:
+                callbacks.append(WandbLoggerCallback(project=self.wandb_project))
 
-        return result
+                # Define the running configuration
+                running_config = RunConfig(
+                    callbacks=callbacks,
+                    storage_path= self.ray_storage_path + "ray_results"
+                )
+
+            ray_trainer = TorchTrainer(
+                self.train_func,
+                scaling_config=scaling_config,
+                run_config=running_config
+            )
+
+            result = ray_trainer.fit()
+            # Save model
+            best_ckpt = result.get_best_checkpoint(metric="eval_loss", mode="min")
+            with best_ckpt.as_directory() as checkpoint_dir:
+                model = AutoModelForSequenceClassification.from_pretrained(checkpoint_dir+"/checkpoint")
+                filename = self.model_file_name + ".pt"
+                torch.save(model, filename)
+
+            # Stop ray
+            ray.shutdown()
+
+            return result
+        finally:
+            ray.shutdown()
+
 
 if __name__ == "__main__":
     model_name = "distilbert-base-cased"
     data_type = "csv"
-    local_train_file = "data/train_small.csv"
-    local_test_file = "data/test_small.csv"
+    local_train_file = "data/train_sampled.csv"
+    local_test_file = "data/test_sampled.csv"
+    ray_storage_path = "/taiga/mohanar2"
     num_labels = 5
     use_gpu = False
     num_workers = 1
 
     finetuner = ClowderSQFineTuner(model_name=model_name, num_labels=num_labels,
-                                   data_type=data_type, local_train_file=local_train_file,
-                                   local_test_file=local_test_file)
+                                   data_type=data_type, ray_storage_path= ray_storage_path,
+                                   local_train_file=local_train_file,local_test_file=local_test_file)
     finetuner.run()
