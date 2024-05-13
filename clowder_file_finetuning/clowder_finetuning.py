@@ -51,8 +51,10 @@ class ClowderSQFineTuner:
             self.ray_storage_path = ray_storage_path
         else:
             # Default path
-            if not os.path.exists(".clowder_finetuning"):
-                self.ray_storage_path = "~/ray_results/"
+            if not os.path.exists("clowder_finetuning"):
+                os.makedirs("clowder_finetuning")
+                os.makedirs("clowder_finetuning/ray_results")
+            self.ray_storage_path = "clowder_finetuning/"
 
     def load_dataset(self):
         # Load datasets based on configuration
@@ -80,7 +82,7 @@ class ClowderSQFineTuner:
 
         # Define the training arguments
         training_args = TrainingArguments(
-            output_dir= "results/",
+            output_dir= self.ray_storage_path + "./results",
             evaluation_strategy="epoch",
             save_strategy="epoch",
             report_to="none"
@@ -120,8 +122,8 @@ class ClowderSQFineTuner:
             # Define the running configuration
             running_config = RunConfig(
                 callbacks=callbacks,
+                storage_path= self.ray_storage_path + "ray_results"
             )
-
 
             ray_trainer = TorchTrainer(
                 self.train_func,
@@ -150,12 +152,13 @@ if __name__ == "__main__":
     data_type = "csv"
     local_train_file = "data/train_sampled.csv"
     local_test_file = "data/test_sampled.csv"
-    ray_storage_path = "/taiga/mohanar2"
+    ray_storage_path = "/taiga/mohanar2/ft_ray/"
     num_labels = 5
     use_gpu = True
     num_workers = 1
 
     finetuner = ClowderSQFineTuner(model_name=model_name, num_labels=num_labels,
                                    data_type=data_type, ray_storage_path= ray_storage_path,
-                                   local_train_file=local_train_file,local_test_file=local_test_file)
+                                   local_train_file=local_train_file,local_test_file=local_test_file,
+                                   use_gpu=use_gpu)
     finetuner.run()
