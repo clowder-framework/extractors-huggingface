@@ -80,7 +80,7 @@ class ClowderSQFineTuner:
 
         # Define the training arguments
         training_args = TrainingArguments(
-            output_dir= self.ray_storage_path + "./results",
+            output_dir= "results/",
             evaluation_strategy="epoch",
             save_strategy="epoch",
             report_to="none"
