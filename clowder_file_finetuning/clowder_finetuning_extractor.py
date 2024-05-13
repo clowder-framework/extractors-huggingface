@@ -9,6 +9,7 @@ from typing import Dict
 from pyclowder.utils import CheckMessage
 from pyclowder.extractors import Extractor
 import pyclowder.files
+from torch.cuda import is_available
 
 from clowder_finetuning import ClowderSQFineTuner
 
@@ -92,15 +93,30 @@ class ClowderSQFinetuningExtractor(Extractor):
         local_test_file = pyclowder.files.download(connector, host, secret_key,
                                                             fileid=LOCAL_TEST_FILE_ID)
 
-        finetuner = ClowderSQFineTuner(model_name=MODEL_NAME,
-                                       num_labels=NUM_LABELS,
-                                       model_file_name=MODEL_FILE_NAME,
-                                       data_type=DATA_TYPE,
-                                       local_train_file=local_train_file,
-                                       local_test_file=local_test_file,
-                                       use_gpu=False,
-                                       wandb_project=WANDB_PROJECT_NAME,
-                                       num_workers=1)
+        # Check if GPU is available
+        if is_available():
+            logger.info("GPU is available")
+            finetuner = ClowderSQFineTuner(model_name=MODEL_NAME,
+                                           num_labels=NUM_LABELS,
+                                           model_file_name=MODEL_FILE_NAME,
+                                           data_type=DATA_TYPE,
+                                           local_train_file=local_train_file,
+                                           local_test_file=local_test_file,
+                                           # Change the path to the desired path
+                                           ray_storage_path="/taiga/mohanar2/ft_ray/",
+                                           use_gpu=True,
+                                           wandb_project=WANDB_PROJECT_NAME,
+                                           num_workers=1)
+        else:
+            finetuner = ClowderSQFineTuner(model_name=MODEL_NAME,
+                                           num_labels=NUM_LABELS,
+                                           model_file_name=MODEL_FILE_NAME,
+                                           data_type=DATA_TYPE,
+                                           local_train_file=local_train_file,
+                                           local_test_file=local_test_file,
+                                           use_gpu=False,
+                                           wandb_project=WANDB_PROJECT_NAME,
+                                           num_workers=1)
         result = finetuner.run()
 
         # Log fine-tuning results
