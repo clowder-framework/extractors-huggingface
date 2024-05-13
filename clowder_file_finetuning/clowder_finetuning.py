@@ -52,9 +52,7 @@ class ClowderSQFineTuner:
         else:
             # Default path
             if not os.path.exists(".clowder_finetuning"):
-                os.makedirs(".clowder_finetuning")
-                os.makedirs(".clowder_finetuning/ray_results")
-            self.ray_storage_path = ".clowder_finetuning/"
+                self.ray_storage_path = "~/ray_results/"
 
     def load_dataset(self):
         # Load datasets based on configuration
@@ -155,7 +153,7 @@ if __name__ == "__main__":
     local_test_file = "data/test_sampled.csv"
     ray_storage_path = "/taiga/mohanar2"
     num_labels = 5
-    use_gpu = False
+    use_gpu = True
     num_workers = 1
 
     finetuner = ClowderSQFineTuner(model_name=model_name, num_labels=num_labels,
