@@ -120,7 +120,6 @@ class ClowderSQFineTuner:
             # Define the running configuration
             running_config = RunConfig(
                 callbacks=callbacks,
-                storage_path= self.ray_storage_path + "ray_results"
             )
 
 
