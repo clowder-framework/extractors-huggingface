@@ -132,6 +132,15 @@ class ClowderSQFineTuner:
             )
 
             result = ray_trainer.fit()
+
+            # Saving metrics
+            metrics = [result.metrics_dataframe for result in result.results]
+            # convert to dictionary
+            print("Metrics: Look here")
+            metrics = [metrics.to_dict() for metrics in metrics]
+            print("Metrics: Look here")
+            print(metrics)
+
             # Save model
             best_ckpt = result.get_best_checkpoint(metric="eval_loss", mode="min")
             with best_ckpt.as_directory() as checkpoint_dir:
