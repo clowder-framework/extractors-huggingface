@@ -128,7 +128,7 @@ class ClowderSQFinetuningExtractor(Extractor):
         metrics = {"Model metrics": metrics}
 
         # post metadata to Clowder
-        metadata = self.get_metadata(result, 'file', model_file_id, host)
+        metadata = self.get_metadata(metrics, 'file', model_file_id, host)
 
         # Upload metadata to original file
         pyclowder.files.upload_metadata(connector, host, secret_key, model_file_id, metadata)
