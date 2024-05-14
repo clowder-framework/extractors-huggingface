@@ -13,6 +13,7 @@ from torch.cuda import is_available
 
 from clowder_finetuning import ClowderSQFineTuner
 
+
 class ClowderSQFinetuningExtractor(Extractor):
     """Clowder Finetuning Extractor - Fine-tune a pre-trained model from Clowder on data"""
 
@@ -35,7 +36,7 @@ class ClowderSQFinetuningExtractor(Extractor):
 
         MODEL_NAME = ""
         NUM_LABELS = 0
-        MODEL_FILE_NAME= ""
+        MODEL_FILE_NAME = ""
 
         # Local Files Parameters
         LOCAL_TRAIN_FILE_ID = ""
@@ -62,7 +63,6 @@ class ClowderSQFinetuningExtractor(Extractor):
             NUM_LABELS = params['NUM_LABELS']
             print(f"NUM_LABELS: {NUM_LABELS}")
 
-
         if 'LOCAL_TRAIN_FILE_ID' in params:
             LOCAL_TRAIN_FILE_ID = params['LOCAL_TRAIN_FILE_ID']
             print(f"LOCAL_TRAIN_FILE_ID: {LOCAL_TRAIN_FILE_ID}")
@@ -77,7 +77,6 @@ class ClowderSQFinetuningExtractor(Extractor):
             MODEL_FILE_NAME = params['MODEL_FILE_NAME']
             print(f"MODEL_FILE_NAME: {MODEL_FILE_NAME}")
 
-
         # wandb parameters
         if 'WANDB_API_KEY' in params:
             WANDB_API_KEY = params['WANDB_API_KEY']
@@ -86,12 +85,11 @@ class ClowderSQFinetuningExtractor(Extractor):
             WANDB_PROJECT_NAME = params['WANDB_PROJECT_NAME']
             print(f"WANDB_PROJECT_NAME: {WANDB_PROJECT_NAME}")
 
-
         # Load local files from Clowder
         local_train_file = pyclowder.files.download(connector, host, secret_key,
-                                                             fileid=LOCAL_TRAIN_FILE_ID)
+                                                    fileid=LOCAL_TRAIN_FILE_ID)
         local_test_file = pyclowder.files.download(connector, host, secret_key,
-                                                            fileid=LOCAL_TEST_FILE_ID)
+                                                   fileid=LOCAL_TEST_FILE_ID)
 
         # Check if GPU is available
         if is_available():
@@ -117,25 +115,23 @@ class ClowderSQFinetuningExtractor(Extractor):
                                            use_gpu=False,
                                            wandb_project=WANDB_PROJECT_NAME,
                                            num_workers=1)
-        result = finetuner.run()
+        result, metrics = finetuner.run()
 
         # Log fine-tuning results
         logger.info("Fine-tuning results: ")
-        logger.info(result.metrics)
+        logger.info(metrics)
+
+
 
         # Save the model to Clowder
         model_path = MODEL_FILE_NAME + ".pt"
-        # TODO: Change the name of the model file
-        pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, model_path)
+        model_file_id = pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, model_path)
+        # Add metrics to the dataset
+        pyclowder.files.upload_metadata(connector, host, secret_key, model_file_id, {
+            "Model metrics": metrics
+        })
 
 
 if __name__ == "__main__":
     extractor = ClowderSQFinetuningExtractor()
     extractor.start()
-
-
-
-
-
-
-

@@ -85,7 +85,7 @@ class ClowderSQFineTuner:
             output_dir= self.ray_storage_path + "./results",
             evaluation_strategy="epoch",
             save_strategy="epoch",
-            report_to="none"
+            report_to=["none"]
         )
 
         # Define the trainer
@@ -134,12 +134,9 @@ class ClowderSQFineTuner:
             result = ray_trainer.fit()
 
             # Saving metrics
-            metrics = [result.metrics_dataframe for result in result.results]
-            # convert to dictionary
-            print("Metrics: Look here")
-            metrics = [metrics.to_dict() for metrics in metrics]
-            print("Metrics: Look here")
+            metrics = result.metrics_dataframe
             print(metrics)
+            best_metrics = metrics.loc[metrics['eval_loss'].idxmin()].to_dict()
 
             # Save model
             best_ckpt = result.get_best_checkpoint(metric="eval_loss", mode="min")
@@ -151,7 +148,7 @@ class ClowderSQFineTuner:
             # Stop ray
             ray.shutdown()
 
-            return result
+            return result, best_metrics
         finally:
             ray.shutdown()
 
@@ -170,4 +167,6 @@ if __name__ == "__main__":
                                    data_type=data_type, ray_storage_path= ray_storage_path,
                                    local_train_file=local_train_file,local_test_file=local_test_file,
                                    use_gpu=use_gpu)
-    finetuner.run()
+
+    result, metrics = finetuner.run()
+    print(metrics)
