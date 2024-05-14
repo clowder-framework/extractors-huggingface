@@ -102,7 +102,7 @@ class ClowderSQFinetuningExtractor(Extractor):
                                            data_type=DATA_TYPE,
                                            local_train_file=local_train_file,
                                            local_test_file=local_test_file,
-                                           # Change the path to the desired path
+                                           # Change the path to the desired path. TODO: Use environment variable
                                            ray_storage_path="/taiga/mohanar2/ft_ray/",
                                            use_gpu=True,
                                            wandb_project=WANDB_PROJECT_NAME,
