@@ -137,6 +137,9 @@ class ClowderSQFineTuner:
             metrics = result.metrics_dataframe
             print(metrics)
             best_metrics = metrics.loc[metrics['eval_loss'].idxmin()].to_dict()
+            metric_names = ['eval_loss', 'eval_accuracy', 'eval_runtime', 'eval_samples_per_second',
+                            'eval_steps_per_second', 'training_iteration']
+            best_metrics = {k: best_metrics[k] for k in metric_names}
 
             # Save model
             best_ckpt = result.get_best_checkpoint(metric="eval_loss", mode="min")
