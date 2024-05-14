@@ -121,15 +121,17 @@ class ClowderSQFinetuningExtractor(Extractor):
         logger.info("Fine-tuning results: ")
         logger.info(metrics)
 
-
-
         # Save the model to Clowder
         model_path = MODEL_FILE_NAME + ".pt"
         model_file_id = pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, model_path)
         # Add metrics to the dataset
-        pyclowder.files.upload_metadata(connector, host, secret_key, model_file_id, {
-            "Model metrics": metrics
-        })
+        metrics = {"Model metrics": metrics}
+
+        # post metadata to Clowder
+        metadata = self.get_metadata(result, 'file', model_file_id, host)
+
+        # Upload metadata to original file
+        pyclowder.files.upload_metadata(connector, host, secret_key, model_file_id, metadata)
 
 
 if __name__ == "__main__":
