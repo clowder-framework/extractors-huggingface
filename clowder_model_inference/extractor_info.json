@@ -41,12 +41,14 @@
          "MODEL_FILE_ID":{
             "type":"string",
             "title":"Model file ID",
-            "description":"The Clowder file id of the model file"
+            "description":"The Clowder file id of the model file",
+            "format": "clowderFile"
          },
          "DATASET_FILE_ID":{
             "type":"string",
             "title":"Dataset file ID",
-            "description":"The Clowder file id of the dataset file to be used for inference"
+            "description":"The Clowder file id of the dataset file to be used for inference",
+            "format": "clowderFile"
          },
          "PREDICTIONS_FILE_NAME":{
             "type":"string",
