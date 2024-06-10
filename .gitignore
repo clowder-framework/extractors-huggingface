@@ -1,1 +1,4 @@
 /.idea/
+__pycache__/
+prithvi_geospatial_extractor/geospatial_fm/__pycache__/
+.DS_Store
