@@ -48,7 +48,8 @@
             "type":"string",
             "title":"Dataset file ID",
             "description":"The Clowder file id of the dataset file to be used for inference",
-            "format": "clowderFile"
+            "format": "clowderFile",
+            "showOnlyDatasetFiles": true
          },
          "PREDICTIONS_FILE_NAME":{
             "type":"string",

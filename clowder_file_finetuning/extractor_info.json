@@ -37,12 +37,16 @@
         "LOCAL_TRAIN_FILE_ID": {
               "type": "string",
               "title": " Training File Clowder ID",
-              "description": "The ClowderID of the file containing the training data."
+              "description": "The ClowderID of the file containing the training data.",
+              "format": "clowderFile",
+              "showOnlyDatasetFiles": true
           },
         "LOCAL_TEST_FILE_ID": {
               "type": "string",
               "title": "Test File Clowder ID",
-              "description": "The ClowderID of the file containing the test data."
+              "description": "The ClowderID of the file containing the test data.",
+              "format": "clowderFile",
+              "showOnlyDatasetFiles": true
           },
         "NUM_LABELS": {
               "type": "integer",
