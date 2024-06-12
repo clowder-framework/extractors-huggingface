@@ -1,0 +1,34 @@
+services:
+  clowder-finetuning-extractor:
+    image: vismayak/clowder-finetuner-sq-classification:latest
+    shm_size: '10g'
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - clowder2
+    environment:
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672/%2F
+      CLOWDER_VERSION: 2
+    volumes:
+      - /taiga/clowder_volumes/ft_huggingface:/root/.cache/huggingface
+      - /taiga/clowder_volumes/ft_ray_results:/root/ray_results
+      - /taiga/clowder_volumes/ft_ray_tmp:/tmp/ray
+
+  clowder-model-inference:
+    image: vismayak/clowder-sq-classification-model-inference
+    shm_size: '5g'
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - clowder2
+    environment:
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672/%2F
+      CLOWDER_VERSION: 2
+    volumes:
+      - /taiga/clowder_volumes/inf_huggingface:/root/.cache/huggingface
+      - /taiga/clowder_volumes/ray_inf_results:/root/ray_results
+
+networks:
+    clowder2:

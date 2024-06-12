@@ -1,0 +1,59 @@
+{
+  "@context": "http://clowder.ncsa.illinois.edu/contexts/extractors.jsonld",
+  "name": "ncsa.huggingface-model-finetuner",
+  "version": "1.0",
+  "description": "Chose from a list of huggingface models and finetune them on a dataset of your choice",
+  "author": "Vismayak Mohanarajan",
+  "contributors": [
+  ],
+  "contexts": [],
+  "repository": [
+    {
+      "repType": "git",
+      "repUrl": "https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
+    }
+  ],
+  "process": {
+    "file": [
+      "manual.submission"
+    ]
+  },
+  "max_retry": 1,
+  "external_services": [],
+  "dependencies": [],
+  "bibtex": [],
+  "parameters": {
+    "schema": {
+        "MODEL_NAME": {
+            "type": "string",
+            "title": "Model name",
+            "description": "The name of the Sequence Classification model to use. See https://huggingface.co/models for a list of available models."
+        },
+      "HF_DATASET_NAME": {
+            "type": "string",
+            "title": "HuggingFace Dataset name",
+            "description": "The name of the dataset to use. See https://huggingface.co/datasets for a list of available datasets. Must be a dataset that is compatible with the model."
+        },
+      "NUM_LABELS": {
+            "type": "integer",
+            "title": "Number of labels",
+            "description": "The number of labels in the dataset."
+        },
+      "NUM_TRAIN_EXAMPLES": {
+            "type": "integer",
+            "title": "Number of training examples",
+            "description": "The number of training examples to use."
+        },
+      "NUM_TEST_EXAMPLES": {
+            "type": "integer",
+            "title": "Number of test examples",
+            "description": "The number of test examples to use."
+        },
+      "MODEL_FILE_NAME": {
+            "type": "string",
+            "title": "Model File Name",
+            "description": "File name of the fine-tuned model."
+        }
+    }
+  }
+}
