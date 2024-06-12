@@ -101,7 +101,7 @@ class ClowderSQFinetuningExtractor(Extractor):
                                            local_train_file=local_train_file,
                                            local_test_file=local_test_file,
                                            # Change the path to the desired path. TODO: Use environment variable
-                                           ray_storage_path=os.getenv("RAY_STORAGE_PATH", "clowder_finetuning"),
+                                           ray_storage_path=os.getenv("RAY_STORAGE_PATH", "clowder_finetuning/"),
                                            use_gpu=True,
                                            wandb_project=WANDB_PROJECT_NAME,
                                            num_workers=1)
