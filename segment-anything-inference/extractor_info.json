@@ -4,20 +4,14 @@
   "version": "2.5",
   "description": "Segment-Anything (from Meta AI) Model Extractor",
   "author": "Vismayak Mohanarajan",
-  "contexts": [
+  "contexts": [],
+  "repository": [
     {
-      "lines": "http://clowder.ncsa.illinois.edu/metadata/ncsa.wordcount#lines",
-      "words": "http://clowder.ncsa.illinois.edu/metadata/ncsa.wordcount#words",
-      "characters": "http://clowder.ncsa.illinois.edu/metadata/ncsa.wordcount#characters"
+      "repType": "git",
+      "repUrl": "https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
     }
   ],
-  "repository":[
-      {
-         "repType":"git",
-         "repUrl":"https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
-      }
-   ],
-   "process": {
+  "process": {
     "dataset": [
       "*"
     ]

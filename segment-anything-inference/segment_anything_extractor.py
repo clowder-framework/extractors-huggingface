@@ -66,7 +66,7 @@ class SegmentAnythingExtractor(Extractor):
         logging.warning(localfiles)
         logging.warning("\n")
 
-        SAVE_IMAGE = False
+        SAVE_IMAGE = True
         logging.info(f"Parameters: {parameters}")
         if 'parameters' in parameters:
             params = None
