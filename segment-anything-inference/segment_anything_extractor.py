@@ -45,13 +45,11 @@ class SegmentAnythingExtractor(Extractor):
 
             logging.info("Extension: " + extension)
             # Check if the file is an image
-            if extension not in ['.jpg', '.jpeg', '.png']:
-                continue
-
-            logging.info("Downloading file")
-            logging.info(file_dict['name'])
-            localfiles.append(pyclowder.files.download(connector, host, secret_key, file_dict['id'], ext=extension))
-            filenames.append(file_dict['name'])
+            if extension in ['.jpg', '.jpeg', '.png']:
+                logging.info("Downloading file")
+                logging.info(file_dict['name'])
+                localfiles.append(pyclowder.files.download(connector, host, secret_key, file_dict['id'], ext=extension))
+                filenames.append(file_dict['name'])
 
         # These process messages will appear in the Clowder UI under Extractions.
         connector.message_process(resource, "Loading contents of file...")
