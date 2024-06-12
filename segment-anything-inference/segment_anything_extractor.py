@@ -43,6 +43,7 @@ class SegmentAnythingExtractor(Extractor):
             else:
                 extension = "." + file_dict['contentType'].split("/")[1]
 
+            logging.info("Extension: " + extension)
             # Check if the file is an image
             if extension not in ['.jpg', '.jpeg', '.png']:
                 continue
