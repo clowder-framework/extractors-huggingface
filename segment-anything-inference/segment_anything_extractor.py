@@ -120,7 +120,7 @@ class SegmentAnythingExtractor(Extractor):
                 # Delete the file after uploading
                 os.remove(img_file_name)
 
-    logging.warning("Successfully extracted!")
+        logging.warning("Successfully extracted!")
 
 
 if __name__ == "__main__":
