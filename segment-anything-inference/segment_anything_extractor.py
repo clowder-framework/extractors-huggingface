@@ -67,6 +67,7 @@ class SegmentAnythingExtractor(Extractor):
         logging.warning("\n")
 
         SAVE_IMAGE = False
+        logging.info(f"Parameters: {parameters}")
         if 'parameters' in parameters:
             params = None
             logging.info("Received parameters")
