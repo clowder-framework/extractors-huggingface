@@ -67,9 +67,9 @@ class SegmentAnythingExtractor(Extractor):
         logging.warning("\n")
 
         SAVE_IMAGE = False
-
         if 'parameters' in parameters:
             params = None
+            logging.info("Received parameters")
             try:
                 params = json.loads(parameters['parameters'])
             except TypeError as e:
@@ -78,8 +78,9 @@ class SegmentAnythingExtractor(Extractor):
                     params = parameters['parameters']
 
             if 'SAVE_IMAGE' in params:
-                SAVE_IMAGE = params['SAVE_IMAGE']
-                print(f"Received SAVE_IMAGE: {SAVE_IMAGE}")
+                SAVE_IMAGE = params['SAVE_IMAGE'] == "True"
+                logging.info(f"Received SAVE_IMAGE: {SAVE_IMAGE}")
+
 
         # Check if gpu is available
         if is_available():
@@ -115,6 +116,7 @@ class SegmentAnythingExtractor(Extractor):
             os.remove(json_file_name)
 
             if SAVE_IMAGE:
+                logging.info("Uploading masked image")
                 img_file_name = file_name + "_masked.png"
                 pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
                 # Delete the file after uploading
