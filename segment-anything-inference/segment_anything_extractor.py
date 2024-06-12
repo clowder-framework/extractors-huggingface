@@ -96,11 +96,7 @@ class SegmentAnythingExtractor(Extractor):
             actor.generate_mask.remote(localfiles[i]) for i in range(len(localfiles))
         ])
 
-        if SAVE_IMAGE:
-            for i in range(len(segmented_json_masks)):
-                actor.save_output.remote(segmented_json_masks[i], localfiles[i], localfiles[i].split(".")[0] + "_masked.png")
         # Encode the masks as JSON
-
         class NumpyEncoder(json.JSONEncoder):
             def default(self, obj):
                 if isinstance(obj, np.ndarray):
@@ -117,13 +113,16 @@ class SegmentAnythingExtractor(Extractor):
             os.remove(json_file_name)
 
             if SAVE_IMAGE:
-                logging.info("Uploading masked image")
                 img_file_name = file_name + "_masked.png"
+                ref = actor.save_output.remote(segmented_json_masks[i], localfiles[i], img_file_name)
+                # Wait for the task to finish
+                ray.get(ref)
+                logging.info("Uploading masked image")
                 pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
                 # Delete the file after uploading
                 os.remove(img_file_name)
 
-            logging.warning("Successfully extracted!")
+    logging.warning("Successfully extracted!")
 
 
 if __name__ == "__main__":

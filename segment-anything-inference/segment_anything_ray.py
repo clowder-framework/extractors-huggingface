@@ -43,6 +43,5 @@ if __name__ == "__main__":
     # Create a Ray actor
     segment_anything = SegmentAnything.options(num_gpus=1).remote()
     mask_json = ray.get(segment_anything.generate_mask.remote("test.jpeg"))
-    # print(mask_json)
     ray.get(segment_anything.save_output.remote(mask_json, "test.jpeg", "output.png"))
     ray.shutdown()
