@@ -33,7 +33,7 @@ class SegmentAnythingExtractor(Extractor):
         filelist = pyclowder.datasets.get_file_list(connector, host, secret_key, dataset_id)
         localfiles = []
         filenames = []
-        clowder_version = int(os.getenv('CLOWDER_VERSION', '1'))
+        clowder_version = int(os.getenv('CLOWDER_VERSION', '2'))
 
         # # Loop through dataset and download all file "locally"
         for file_dict in filelist:
