@@ -32,7 +32,7 @@ class SegmentAnythingFileExtractor(Extractor):
         logger = logging.getLogger(__name__)
 
         file_path = resource["local_paths"][0]
-        file_id = resource["id"]
+        dataset_id = resource["parent"]["id"]
         logger.info("Resource: " + str(resource))
 
         # Load parameters
@@ -78,8 +78,19 @@ class SegmentAnythingFileExtractor(Extractor):
         with open(json_file_name, 'w') as f:
             json.dump(segmented_json_mask, f, cls=NumpyEncoder)
 
+        #Upload file
+        pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
+        os.remove(json_file_name)
 
+        if SAVE_IMAGE:
+            img_file_name = file_name + "_masked.png"
+            ref = actor.save_output.remote(segmented_json_mask, file_path, output_path)
+            ray.get(ref)
+            logging.info("Uploading masked image")
+            pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
+            os.remove(img_file_name)
 
+        logging.warning("Successfully extracted!")
 
 
 if __name__ == "__main__":
