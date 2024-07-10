@@ -84,7 +84,7 @@ class SegmentAnythingFileExtractor(Extractor):
 
         if SAVE_IMAGE:
             img_file_name = file_name + "_masked.png"
-            ref = actor.save_output.remote(segmented_json_mask, file_path, output_path)
+            ref = actor.save_output.remote(segmented_json_mask, file_path, img_file_name)
             ray.get(ref)
             logging.info("Uploading masked image")
             pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
