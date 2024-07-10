@@ -32,9 +32,8 @@
         "default": "True"
       },
       "BBOX": {
-        "type": "object",
+        "type": "string",
         "title": "Annotate image",
-        "description": "Annotate image",
         "format": "ImageAnnotator"
       }
     }
