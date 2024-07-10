@@ -12,8 +12,8 @@
     }
   ],
   "process": {
-    "dataset": [
-      "*"
+    "file": [
+      "image/*"
     ]
   },
   "max_retry": 1,
@@ -30,6 +30,12 @@
           "False"
         ],
         "default": "True"
+      },
+      "BBOX": {
+        "type": "object",
+        "title": "Annotate image",
+        "description": "Annotate image",
+        "format": "ImageAnnotator"
       }
     }
   }
