@@ -1,0 +1,8 @@
+git+https://github.com/facebookresearch/segment-anything.git
+opencv-python-headless
+pycocotools
+matplotlib
+onnxruntime
+onnx
+torch
+pyclowder==3.0.7

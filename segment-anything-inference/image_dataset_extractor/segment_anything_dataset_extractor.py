@@ -12,8 +12,10 @@ import ray
 
 from segment_anything_ray import SegmentAnything
 
-class SegmentAnythingExtractor(Extractor):
+
+class SegmentAnythingDatasetExtractor(Extractor):
     """ Cloweder Segment-Anything extractor - Uses Meta AI Segment-Anything model to create masks """
+
     def __init__(self):
         # parse command line and load default logging configuration
         Extractor.__init__(self)
@@ -80,7 +82,6 @@ class SegmentAnythingExtractor(Extractor):
                 SAVE_IMAGE = params['SAVE_IMAGE'] == "True"
                 logging.info(f"Received SAVE_IMAGE: {SAVE_IMAGE}")
 
-
         # Check if gpu is available
         if is_available():
             logging.warning("GPU is available")
@@ -129,11 +130,5 @@ if __name__ == "__main__":
     ray.init(_temp_dir="/taiga/mohanar2/segment-anything/ray")
     assert ray.is_initialized()
     print("Ray initialized")
-    extractor = SegmentAnythingExtractor()
+    extractor = SegmentAnythingDatasetExtractor()
     extractor.start()
-
-
-
-
-
-
