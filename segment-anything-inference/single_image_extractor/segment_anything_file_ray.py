@@ -52,7 +52,7 @@ if __name__ == "__main__":
     segment_anything = SegmentAnything.options(num_gpus=1).remote()
 
     # Define bounding boxes as a list of tuples (x, y, width, height)
-    bounding_boxes = [(94.26666259765625, 34.116668701171875, 293, 322)]
+    # bounding_boxes = [(94.26666259765625, 34.116668701171875, 293, 322)]
 
     mask_json = ray.get(segment_anything.generate_mask.remote("test.jpeg", bounding_boxes))
     ray.get(segment_anything.save_output.remote(mask_json, "test.jpeg", "output.png"))
