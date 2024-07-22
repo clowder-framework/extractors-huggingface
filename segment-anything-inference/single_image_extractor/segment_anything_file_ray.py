@@ -25,7 +25,7 @@ class SegmentAnything:
             sam_result = self.mask_generator.generate(image_rgb)
         else:
             self.predictor.set_image(image_rgb)
-            masks, _, _ = self.predictor.predict(np.array(bounding_box))
+            masks, _, _ = self.predictor.predict(box=np.array(bounding_box))
             sam_result = masks[0]
         return sam_result
 
