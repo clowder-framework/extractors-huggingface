@@ -18,18 +18,10 @@ class SegmentAnything:
         self.predictor = SamPredictor(self.sam)
         print("SegmentAnything initialized")
 
-    def generate_mask(self, image_path, bounding_boxes=None):
+    def generate_mask(self, image_path):
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        if bounding_boxes is None:
-            sam_result = self.mask_generator.generate(image_rgb)
-        else:
-            sam_result = []
-            for box in bounding_boxes:
-                x, y, w, h = box
-                self.predictor.set_image(image_rgb)
-                mask = self.predictor.predict(box=(x, y, w, h))
-                sam_result.append(mask)
+        sam_result = self.mask_generator.generate(image_rgb)
         return sam_result
 
     def save_output(self, result_dict, original_image_path, output_path):
@@ -51,9 +43,6 @@ if __name__ == "__main__":
     # Create a Ray actor
     segment_anything = SegmentAnything.options(num_gpus=1).remote()
 
-    # Define bounding boxes as a list of tuples (x, y, width, height)
-    bounding_boxes = [(94.26666259765625, 34.116668701171875, 293, 322)]
-
-    mask_json = ray.get(segment_anything.generate_mask.remote("test.jpeg", bounding_boxes))
+    mask_json = ray.get(segment_anything.generate_mask.remote("test.jpeg"))
     ray.get(segment_anything.save_output.remote(mask_json, "test.jpeg", "output.png"))
     ray.shutdown()
