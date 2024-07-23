@@ -11,7 +11,7 @@ from torch.cuda import is_available
 import ray
 from PIL import Image
 
-from segment_anything_ray import SegmentAnything
+from segment_anything_file_ray import SegmentAnything
 
 
 class SegmentAnythingFileExtractor(Extractor):
