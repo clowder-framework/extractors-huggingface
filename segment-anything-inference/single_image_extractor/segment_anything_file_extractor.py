@@ -62,9 +62,11 @@ class SegmentAnythingFileExtractor(Extractor):
                     SAVE_IMAGE = parameters["SAVE_IMAGE"]
                 if "bbox" in parameters:
                     BBOX = parameters["bbox"]
-                    print(BBOX)
                     # convert string to list
                     BBOX = json.loads(BBOX)['boundingBox']
+
+            logging.info("Parameters: " + str(parameters))
+
 
             # Check if gpu is available
             if is_available():
