@@ -75,8 +75,8 @@ if __name__ == "__main__":
     segment_anything = SegmentAnything.options(num_gpus=1).remote()
 
     # Define bounding boxes as a list of tuples (x, y, width, height)
-    # bounding_box = [94.26666259765625, 34.116668701171875, 293, 322]
-    bounding_box = None
+    bounding_box = [94.26666259765625, 34.116668701171875, 293, 322]
+    # bounding_box = None
     # Check if bounding box is provided and call the appropriate method
     if bounding_box:
         mask = ray.get(segment_anything.generate_prompt_mask.remote("test.jpeg", bounding_box))
