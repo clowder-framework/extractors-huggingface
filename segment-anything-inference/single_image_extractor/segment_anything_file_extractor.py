@@ -39,6 +39,13 @@ class SegmentAnythingFileExtractor(Extractor):
         SAVE_IMAGE = True
         BBOX = None
 
+        # Helper class to encode the masks as JSON
+        class NumpyEncoder(json.JSONEncoder):
+            def default(self, obj):
+                if isinstance(obj, np.ndarray):
+                    return obj.tolist()
+                return json.JSONEncoder.default(self, obj)
+
         if 'parameters' in parameters:
             params = None
             logging.info("Received parameters")
@@ -65,18 +72,15 @@ class SegmentAnythingFileExtractor(Extractor):
             logging.warning("GPU is not available")
             actor = SegmentAnything.remote()
 
-        segmented_json_mask = ray.get(actor.generate_mask.remote(file_path, BBOX))
-
-        # Encode the masks as JSON
-        class NumpyEncoder(json.JSONEncoder):
-            def default(self, obj):
-                if isinstance(obj, np.ndarray):
-                    return obj.tolist()
-                return json.JSONEncoder.default(self, obj)
-
         file_name = resource['name'].split(".")[0]
         logger.info("File name: " + file_name)
 
+        if BBOX is None:
+            segmented_json_mask = ray.get(actor.generate_mask.remote(file_path))
+        else:
+            segmented_json_mask = ray.get(actor.generate_prompt_mask.remote("test.jpeg", BBOX))
+
+        # Encode the masks as JSON and upload to dataset
         json_file_name = file_name + "_mask.json"
         with open(json_file_name, 'w') as f:
             json.dump(segmented_json_mask, f, cls=NumpyEncoder)
@@ -85,9 +89,13 @@ class SegmentAnythingFileExtractor(Extractor):
         pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
         os.remove(json_file_name)
 
+
         if SAVE_IMAGE:
             img_file_name = file_name + "_masked.png"
-            ref = actor.save_output.remote(segmented_json_mask, file_path, img_file_name)
+            if BBOX is not None:
+                ref = actor.save_prompt_output.remote(segmented_json_mask, file_path, img_file_name)
+            else:
+                ref = actor.save_output.remote(segmented_json_mask, file_path, img_file_name)
             ray.get(ref)
             logging.info("Uploading masked image")
             pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
