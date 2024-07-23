@@ -14,6 +14,14 @@ from PIL import Image
 from segment_anything_file_ray import SegmentAnything
 
 
+# Helper class to encode the masks as JSON
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
+
 class SegmentAnythingFileExtractor(Extractor):
     """ Cloweder Segment-Anything extractor - Uses Meta AI Segment-Anything model to create masks """
 
@@ -39,13 +47,6 @@ class SegmentAnythingFileExtractor(Extractor):
         SAVE_IMAGE = True
         BBOX = None
 
-        # Helper class to encode the masks as JSON
-        class NumpyEncoder(json.JSONEncoder):
-            def default(self, obj):
-                if isinstance(obj, np.ndarray):
-                    return obj.tolist()
-                return json.JSONEncoder.default(self, obj)
-
         if 'parameters' in parameters:
             params = None
             logging.info("Received parameters")
@@ -62,7 +63,7 @@ class SegmentAnythingFileExtractor(Extractor):
                 BBOX = parameters["bbox"]
                 print(BBOX)
                 # convert string to list
-                BBOX = json.loads(BBOX)
+                BBOX = json.loads(BBOX)['boundingBox']
 
         # Check if gpu is available
         if is_available():
@@ -102,6 +103,7 @@ class SegmentAnythingFileExtractor(Extractor):
             os.remove(img_file_name)
 
         logging.warning("Successfully extracted!")
+        return
 
 
 if __name__ == "__main__":
