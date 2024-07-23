@@ -10,7 +10,7 @@ import pyclowder.files
 from torch.cuda import is_available
 import ray
 
-from segment_anything_ray import SegmentAnything
+from segment_anything_dataset_ray import SegmentAnything
 
 
 class SegmentAnythingDatasetExtractor(Extractor):
