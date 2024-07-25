@@ -75,7 +75,7 @@ if __name__ == "__main__":
     segment_anything = SegmentAnything.options(num_gpus=1).remote()
 
     # Define bounding boxes as a list of tuples (x, y, width, height)
-    bounding_box = [170.27, 187.62, 255.00, 137.00]
+    bounding_box = [157.26, 183.61, 266, 149]
     # bounding_box = None
     # Check if bounding box is provided and call the appropriate method
     if bounding_box:
