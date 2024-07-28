@@ -39,7 +39,7 @@
         "title": "Image task for the model",
         "enum": [
           "Image Classification",
-          "Image Segmentation"
+          "Object Detection"
         ],
         "default": "Image Classification"
       }
