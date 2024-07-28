@@ -80,10 +80,10 @@ class ImgExtractor(Extractor):
         if "MODEL_NAME" in params:
             model_name = params["MODEL_NAME"]
 
-        if "TASK" in params:
-            if params["TASK"] == "Image Classification":
+        if "MODEL_TASK" in params:
+            if params["MODEL_TASK"] == "Image Classification":
                 task = "image-classification"
-            elif params["TASK"] == "Image Segmentation":
+            elif params["MODEL_TASK"] == "Image Segmentation":
                 task = "image-segmentation"
 
         logging.info(f"Model Name: {model_name} Task: {task}")
