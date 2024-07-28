@@ -8,6 +8,7 @@ from PIL import Image
 import pyclowder.files
 from pyclowder.extractors import Extractor
 from transformers import pipeline
+from typing import Dict
 
 @ray.remote
 class BatchPredictor:
@@ -64,14 +65,22 @@ class ImgExtractor(Extractor):
         # Load user-defined params
         model_name = ""
         task = ""
+
+        print(f"Parameters: {parameters}")
+
         if 'parameters' in parameters:
             params = None
             try:
                 params = json.loads(parameters['parameters'])
-                logging.info(f"Parameters: {params}")
-            except Exception as e:
-                logger.error(f"Error loading parameters: {e}")
+            except TypeError as e:
+                print(f"Failed to load parameters, it's not compatible with json.loads().\nError:{e}")
+                if type(parameters == Dict):
+                    params = parameters['parameters']
+
+        if "MODEL_NAME" in params:
             model_name = params["MODEL_NAME"]
+
+        if "TASK" in params:
             if params["TASK"] == "Image Classification":
                 task = "image-classification"
             elif params["TASK"] == "Image Segmentation":
