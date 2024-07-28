@@ -125,9 +125,7 @@ class ImgExtractor(Extractor):
         logging.warning("Successfully extracted!")
 
 if __name__ == "__main__":
-    ray_address = os.getenv("RAY_ADDRESS", "ray://127.0.0.1:10001")
     # Run on local ray cluster and install required dependencies
-    ray.init(ray_address, runtime_env={"pip": ["transformers", "torch", "torchvision", "timm"]},
-             )
+    ray.init()
     extractor = ImgExtractor()
     extractor.start()
