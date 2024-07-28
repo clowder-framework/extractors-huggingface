@@ -1,8 +1,8 @@
 {
   "@context": "http://clowder.ncsa.illinois.edu/contexts/extractors.jsonld",
-  "name": "ncsa.custom-inference-huggingface",
+  "name": "ncsa.image-inference-huggingface",
   "version": "1.1",
-  "description": "The Image Classification extractor uses a pre-trained Huggingface model to classify images. The user provides the name of the model from huggingface and the image dataset to classify.",
+  "description": "The Image Inference extractor uses a pre-trained Huggingface model to classify images. The user provides the name of the model from huggingface and the image dataset to classify.",
   "author": "Vismayak Mohanarajan",
   "contributors": [
     "Luigi Marini"

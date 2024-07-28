@@ -68,6 +68,7 @@ class ImgExtractor(Extractor):
             params = None
             try:
                 params = json.loads(parameters['parameters'])
+                logging.info(f"Parameters: {params}")
             except Exception as e:
                 logger.error(f"Error loading parameters: {e}")
             model_name = params["MODEL_NAME"]
