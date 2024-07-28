@@ -41,7 +41,7 @@
           "Image Classification",
           "Image Segmentation"
         ],
-        "default": "Image Segmentation"
+        "default": "Image Classification"
       }
     }
   }

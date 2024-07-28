@@ -86,6 +86,7 @@ class ImgExtractor(Extractor):
             elif params["TASK"] == "Image Segmentation":
                 task = "image-segmentation"
 
+        logging.info(f"Model Name: {model_name} Task: {task}")
 
         # Initialize ray actor and model
         self.remoteBatchPredictor = BatchPredictor.options(max_concurrency=3).remote(task, model_name)
