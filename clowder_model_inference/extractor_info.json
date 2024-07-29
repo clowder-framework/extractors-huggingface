@@ -42,13 +42,13 @@
             "type":"string",
             "title":"Model file ID",
             "description":"The Clowder file id of the model file",
-            "format": "clowderFile"
+            "format": "ClowderFile"
          },
          "DATASET_FILE_ID":{
             "type":"string",
             "title":"Dataset file ID",
             "description":"The Clowder file id of the dataset file to be used for inference",
-            "format": "clowderFile",
+            "format": "ClowderFile",
             "showOnlyDatasetFiles": true
          },
          "PREDICTIONS_FILE_NAME":{
