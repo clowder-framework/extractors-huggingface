@@ -28,11 +28,11 @@ class ClowderSQInferenceExtractor(Extractor):
         logger = logging.getLogger(__name__)
 
         dataset_id = resource['parent']['id']
+        file_id = resource['id']
 
         # Load user-defined params from the GUI.
         BASE_MODEL_NAME = ""
         MODEL_FILE_ID = ""
-        DATASET_FILE_ID = ""
         PREDICTIONS_FILE_NAME = ""
 
         print(f"Parameters: {parameters}")
@@ -52,9 +52,6 @@ class ClowderSQInferenceExtractor(Extractor):
         if 'MODEL_FILE_ID' in params:
             MODEL_FILE_ID = params['MODEL_FILE_ID']
             print(f"MODEL_FILE_ID: {MODEL_FILE_ID}")
-        if 'DATASET_FILE_ID' in params:
-            DATASET_FILE_ID = params['DATASET_FILE_ID']
-            print(f"DATASET_FILE_ID: {DATASET_FILE_ID}")
         if 'PREDICTIONS_FILE_NAME' in params:
             PREDICTIONS_FILE_NAME = params['PREDICTIONS_FILE_NAME']
             print(f"PREDICTIONS_FILE_NAME: {PREDICTIONS_FILE_NAME}")
@@ -64,7 +61,7 @@ class ClowderSQInferenceExtractor(Extractor):
         model_file = pyclowder.files.download(connector, host, secret_key,fileid= MODEL_FILE_ID)
 
         # Get the dataset file
-        dataset_file = pyclowder.files.download(connector, host, secret_key,fileid= DATASET_FILE_ID)
+        dataset_file = pyclowder.files.download(connector, host, secret_key,fileid= file_id)
 
         # Run the inference
         predictor = TorchSQModelPredictor(BASE_MODEL_NAME, model_file, dataset_file, PREDICTIONS_FILE_NAME)

@@ -5,10 +5,8 @@
    "description":"Extracts predictions from a trained sequence classification model in Clowder",
    "author":"Vismayak Mohanarajan",
    "contributors":[
-
    ],
    "contexts":[
-
    ],
    "repository":[
       {
@@ -16,11 +14,11 @@
          "repUrl":"https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
       }
    ],
-   "process":{
-      "file":[
-         "manual.submission"
-      ]
-   },
+   "process": {
+    "file": [
+      "text/*"
+    ]
+  },
    "max_retry":1,
    "external_services":[
 
@@ -43,13 +41,6 @@
             "title":"Model file ID",
             "description":"The Clowder file id of the model file",
             "format": "ClowderFile"
-         },
-         "DATASET_FILE_ID":{
-            "type":"string",
-            "title":"Dataset file ID",
-            "description":"The Clowder file id of the dataset file to be used for inference",
-            "format": "ClowderFile",
-            "showOnlyDatasetFiles": true
          },
          "PREDICTIONS_FILE_NAME":{
             "type":"string",
