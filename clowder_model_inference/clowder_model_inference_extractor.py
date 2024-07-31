@@ -61,10 +61,10 @@ class ClowderSQInferenceExtractor(Extractor):
 
 
         # Get the model file
-        model_file = pyclowder.files.download(connector, host, secret_key, MODEL_FILE_ID)
+        model_file = pyclowder.files.download(connector, host, secret_key,fileid= MODEL_FILE_ID)
 
         # Get the dataset file
-        dataset_file = pyclowder.files.download(connector, host, secret_key, DATASET_FILE_ID)
+        dataset_file = pyclowder.files.download(connector, host, secret_key,fileid= DATASET_FILE_ID)
 
         # Run the inference
         predictor = TorchSQModelPredictor(BASE_MODEL_NAME, model_file, dataset_file, PREDICTIONS_FILE_NAME)
