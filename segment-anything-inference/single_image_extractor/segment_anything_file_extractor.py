@@ -63,37 +63,37 @@ class SegmentAnythingFileExtractor(Extractor):
 
         logging.info("Parameters: " + str(parameters))
 
-        segment_anything = SegmentAnything()
-
-        file_name = resource['name'].split(".")[0]
-        logger.info("File name: " + file_name)
-
-        if BBOX is None:
-            segmented_json_mask = segment_anything.generate_mask(file_path)
-        else:
-            segmented_json_mask = segment_anything.generate_prompt_mask(file_path, BBOX)
-
-        # Encode the masks as JSON and upload to dataset
-        json_file_name = file_name + "_mask.json"
-        with open(json_file_name, 'w') as f:
-            json.dump(segmented_json_mask, f, cls=NumpyEncoder)
-
-        #Upload file
-        pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
-        os.remove(json_file_name)
+        # segment_anything = SegmentAnything()
+        #
+        # file_name = resource['name'].split(".")[0]
+        # logger.info("File name: " + file_name)
+        #
+        # if BBOX is None:
+        #     segmented_json_mask = segment_anything.generate_mask(file_path)
+        # else:
+        #     segmented_json_mask = segment_anything.generate_prompt_mask(file_path, BBOX)
+        #
+        # # Encode the masks as JSON and upload to dataset
+        # json_file_name = file_name + "_mask.json"
+        # with open(json_file_name, 'w') as f:
+        #     json.dump(segmented_json_mask, f, cls=NumpyEncoder)
+        #
+        # #Upload file
+        # pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
+        # os.remove(json_file_name)
 
         logging.info("User chose to save image- " + str(SAVE_IMAGE))
-        if SAVE_IMAGE:
-            img_file_name = file_name + "_masked.png"
-            if BBOX is not None:
-                segment_anything.save_prompt_output(segmented_json_mask, file_path, img_file_name)
-            else:
-                segment_anything.save_output(segmented_json_mask, file_path, img_file_name)
-            logging.info("Uploading masked image")
-            pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
-            os.remove(img_file_name)
-
-        logging.warning("Successfully extracted!")
+        # if SAVE_IMAGE:
+        #     img_file_name = file_name + "_masked.png"
+        #     if BBOX is not None:
+        #         segment_anything.save_prompt_output(segmented_json_mask, file_path, img_file_name)
+        #     else:
+        #         segment_anything.save_output(segmented_json_mask, file_path, img_file_name)
+        #     logging.info("Uploading masked image")
+        #     pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
+        #     os.remove(img_file_name)
+        #
+        # logging.warning("Successfully extracted!")
 
 
 
