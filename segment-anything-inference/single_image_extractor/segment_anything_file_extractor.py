@@ -46,18 +46,17 @@ class SegmentAnythingFileExtractor(Extractor):
 
         if 'parameters' in parameters:
             params = None
-            logging.info("Received parameters")
+            logging.info("Received parameters", str(parameters))
             try:
                 params = json.loads(parameters['parameters'])
             except TypeError as e:
                 print(f"Failed to load parameters, it's not compatible with json.loads().\nError:{e}")
                 if type(parameters == Dict):
                     params = parameters['parameters']
-            logging.info("Parameters-", params)
 
-            if "SAVE_IMAGE" in params:
+            if "SAVE_IMAGE" in parameters:
                 SAVE_IMAGE = eval(parameters["SAVE_IMAGE"])
-            if "bbox" in params:
+            if "bbox" in parameters:
                 BBOX = parameters["bbox"]
                 # convert string to list
                 BBOX = json.loads(BBOX)['boundingBox']
