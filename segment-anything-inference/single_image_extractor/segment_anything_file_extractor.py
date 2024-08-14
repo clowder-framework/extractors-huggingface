@@ -38,6 +38,7 @@ class SegmentAnythingFileExtractor(Extractor):
 
         file_path = resource["local_paths"][0]
         dataset_id = resource["parent"]["id"]
+        file_name = resource['name'].split(".")[0]
         logger.info("Resource: " + str(resource))
 
         # Load parameters
@@ -60,7 +61,7 @@ class SegmentAnythingFileExtractor(Extractor):
 
         segment_anything = SegmentAnything()
 
-        file_name = resource['name'].split(".")[0]
+
         logger.info("File name: " + file_name)
 
         if BBOX is None:
@@ -87,9 +88,6 @@ class SegmentAnythingFileExtractor(Extractor):
             logging.info("Uploading masked image")
             pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
             os.remove(img_file_name)
-
-        logging.warning("Successfully extracted!")
-
 
 
 if __name__ == "__main__":
