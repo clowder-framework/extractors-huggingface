@@ -13,7 +13,7 @@
   ],
   "process": {
     "file": [
-      "image/*"
+      "manual.submission"
     ]
   },
   "max_retry": 1,
