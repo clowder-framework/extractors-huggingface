@@ -54,9 +54,10 @@ class SegmentAnythingFileExtractor(Extractor):
                 if type(parameters == Dict):
                     params = parameters['parameters']
 
-            if "SAVE_IMAGE" in parameters:
+        
+            if "SAVE_IMAGE" in params:
                 SAVE_IMAGE = eval(parameters["SAVE_IMAGE"])
-            if "bbox" in parameters:
+            if "bbox" in params:
                 BBOX = parameters["bbox"]
                 # convert string to list
                 BBOX = json.loads(BBOX)['boundingBox']
