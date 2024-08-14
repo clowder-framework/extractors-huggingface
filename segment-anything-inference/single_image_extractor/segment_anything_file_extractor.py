@@ -7,11 +7,9 @@ import numpy as np
 from pyclowder.utils import CheckMessage
 from pyclowder.extractors import Extractor
 import pyclowder.files
-from torch.cuda import is_available
-import ray
 from PIL import Image
 
-from segment_anything_file_ray import SegmentAnything
+from segment_anything_file import SegmentAnything
 
 
 # Helper class to encode the masks as JSON
@@ -67,22 +65,15 @@ class SegmentAnythingFileExtractor(Extractor):
 
             logging.info("Parameters: " + str(parameters))
 
-
-            # Check if gpu is available
-            if is_available():
-                logging.warning("GPU is available")
-                actor = SegmentAnything.options(num_gpus=1).remote()
-            else:
-                logging.warning("GPU is not available")
-                actor = SegmentAnything.remote()
+            segment_anything = SegmentAnything()
 
             file_name = resource['name'].split(".")[0]
             logger.info("File name: " + file_name)
 
             if BBOX is None:
-                segmented_json_mask = ray.get(actor.generate_mask.remote(file_path))
+                segmented_json_mask = segment_anything.generate_mask(file_path)
             else:
-                segmented_json_mask = ray.get(actor.generate_prompt_mask.remote("test.jpeg", BBOX))
+                segmented_json_mask = segment_anything.generate_prompt_mask(file_path, BBOX)
 
             # Encode the masks as JSON and upload to dataset
             json_file_name = file_name + "_mask.json"
@@ -97,10 +88,9 @@ class SegmentAnythingFileExtractor(Extractor):
             if SAVE_IMAGE:
                 img_file_name = file_name + "_masked.png"
                 if BBOX is not None:
-                    ref = actor.save_prompt_output.remote(segmented_json_mask, file_path, img_file_name)
+                    segment_anything.save_prompt_output(segmented_json_mask, file_path, img_file_name)
                 else:
-                    ref = actor.save_output.remote(segmented_json_mask, file_path, img_file_name)
-                ray.get(ref)
+                    segment_anything.save_output(segmented_json_mask, file_path, img_file_name)
                 logging.info("Uploading masked image")
                 pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
                 os.remove(img_file_name)
@@ -114,10 +104,5 @@ class SegmentAnythingFileExtractor(Extractor):
 
 
 if __name__ == "__main__":
-    ray.shutdown()
-    print("Starting Ray")
-    ray.init(_temp_dir="/taiga/mohanar2/segment-anything/ray")
-    assert ray.is_initialized()
-    print("Ray initialized")
     extractor = SegmentAnythingFileExtractor()
     extractor.start()
