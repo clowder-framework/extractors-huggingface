@@ -53,8 +53,8 @@ class SegmentAnythingFileExtractor(Extractor):
                 print(f"Failed to load parameters, it's not compatible with json.loads().\nError:{e}")
                 if type(parameters == Dict):
                     params = parameters['parameters']
+            logging.info("Parameters-", params)
 
-        
             if "SAVE_IMAGE" in params:
                 SAVE_IMAGE = eval(parameters["SAVE_IMAGE"])
             if "bbox" in params:
