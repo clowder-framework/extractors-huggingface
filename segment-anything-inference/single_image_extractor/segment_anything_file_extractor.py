@@ -55,10 +55,7 @@ class SegmentAnythingFileExtractor(Extractor):
                     params = parameters['parameters']
 
             if "SAVE_IMAGE" in parameters:
-                if SAVE_IMAGE == 'True':
-                    SAVE_IMAGE = True
-                else:
-                    SAVE_IMAGE = False
+                SAVE_IMAGE = eval(parameters["SAVE_IMAGE"])
             if "bbox" in parameters:
                 BBOX = parameters["bbox"]
                 # convert string to list
