@@ -2,10 +2,7 @@ import torch
 import cv2
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
 import numpy as np
-import ray
 
-
-@ray.remote
 class SegmentAnything:
     def __init__(self):
         print("Initializing SegmentAnything")
@@ -18,18 +15,6 @@ class SegmentAnything:
         self.predictor = SamPredictor(self.sam)
         print("SegmentAnything initialized")
 
-    # def generate_mask(self, image_path, bounding_box=None):
-    #     image = cv2.imread(image_path)
-    #     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    #     if bounding_box is None:
-    #         sam_result = self.mask_generator.generate(image_rgb)
-    #     else:
-    #         self.predictor.set_image(image_rgb)
-    #         masks, _, _ = self.predictor.predict(box=np.array(bounding_box))
-    #         sam_result = masks[0]
-    #     return sam_result
-
-    # Use this method when there is no bounding box prompt, generates mask for the entire image
     def generate_mask(self, image_path):
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -48,7 +33,6 @@ class SegmentAnything:
         output_image_bgr = cv2.cvtColor(output_image.astype('uint8'), cv2.COLOR_RGB2BGR)
         cv2.imwrite(output_path, output_image_bgr)
 
-    # Use this method when there is a bounding box prompt, generates mask for the bounding box
     def generate_prompt_mask(self, image_path, bounding_box):
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -67,21 +51,13 @@ class SegmentAnything:
         output_image_bgr = cv2.cvtColor(output_image.astype('uint8'), cv2.COLOR_RGB2BGR)
         cv2.imwrite(output_path, output_image_bgr)
 
-
 if __name__ == "__main__":
-    ray.init(_temp_dir="/taiga/mohanar2/segment-anything/ray")
+    segment_anything = SegmentAnything()
 
-    # Create a Ray actor
-    segment_anything = SegmentAnything.options(num_gpus=1).remote()
-
-    # Define bounding boxes as a list of tuples (x, y, width, height)
     bounding_box = [157.26, 183.61, 266, 149]
-    # bounding_box = None
-    # Check if bounding box is provided and call the appropriate method
     if bounding_box:
-        mask = ray.get(segment_anything.generate_prompt_mask.remote("test.jpeg", bounding_box))
-        ray.get(segment_anything.save_prompt_output.remote(mask, "test.jpeg", "output.png"))
+        mask = segment_anything.generate_prompt_mask("test.jpeg", bounding_box)
+        segment_anything.save_prompt_output(mask, "test.jpeg", "output.png")
     else:
-        mask_json = ray.get(segment_anything.generate_mask.remote("test.jpeg"))
-        ray.get(segment_anything.save_output.remote(mask_json, "test.jpeg", "output.png"))
-    ray.shutdown()
+        mask_json = segment_anything.generate_mask("test.jpeg")
+        segment_anything.save_output(mask_json, "test.jpeg", "output.png")
