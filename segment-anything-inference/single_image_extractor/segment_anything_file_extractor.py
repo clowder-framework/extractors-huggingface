@@ -82,7 +82,7 @@ class SegmentAnythingFileExtractor(Extractor):
         pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
         os.remove(json_file_name)
 
-
+        logging.info("User chose to save image- " + str(SAVE_IMAGE))
         if SAVE_IMAGE:
             img_file_name = file_name + "_masked.png"
             if BBOX is not None:
