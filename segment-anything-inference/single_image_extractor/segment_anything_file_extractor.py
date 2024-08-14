@@ -33,74 +33,68 @@ class SegmentAnythingFileExtractor(Extractor):
         logging.getLogger('__main__').setLevel(logging.DEBUG)
 
     def process_message(self, connector, host, secret_key, resource, parameters):
-        """Get all the files from the resource and process it."""
 
-        try:
-            logger = logging.getLogger(__name__)
+        logger = logging.getLogger(__name__)
 
-            file_path = resource["local_paths"][0]
-            dataset_id = resource["parent"]["id"]
-            logger.info("Resource: " + str(resource))
+        file_path = resource["local_paths"][0]
+        dataset_id = resource["parent"]["id"]
+        logger.info("Resource: " + str(resource))
 
-            # Load parameters
-            SAVE_IMAGE = True
-            BBOX = None
+        # Load parameters
+        SAVE_IMAGE = True
+        BBOX = None
 
-            if 'parameters' in parameters:
-                params = None
-                logging.info("Received parameters")
-                try:
-                    params = json.loads(parameters['parameters'])
-                except TypeError as e:
-                    print(f"Failed to load parameters, it's not compatible with json.loads().\nError:{e}")
-                    if type(parameters == Dict):
-                        params = parameters['parameters']
+        if 'parameters' in parameters:
+            params = None
+            logging.info("Received parameters")
+            try:
+                params = json.loads(parameters['parameters'])
+            except TypeError as e:
+                print(f"Failed to load parameters, it's not compatible with json.loads().\nError:{e}")
+                if type(parameters == Dict):
+                    params = parameters['parameters']
 
-                if "SAVE_IMAGE" in parameters:
-                    SAVE_IMAGE = parameters["SAVE_IMAGE"]
-                if "bbox" in parameters:
-                    BBOX = parameters["bbox"]
-                    # convert string to list
-                    BBOX = json.loads(BBOX)['boundingBox']
+            if "SAVE_IMAGE" in parameters:
+                SAVE_IMAGE = parameters["SAVE_IMAGE"]
+            if "bbox" in parameters:
+                BBOX = parameters["bbox"]
+                # convert string to list
+                BBOX = json.loads(BBOX)['boundingBox']
 
-            logging.info("Parameters: " + str(parameters))
+        logging.info("Parameters: " + str(parameters))
 
-            segment_anything = SegmentAnything()
+        segment_anything = SegmentAnything()
 
-            file_name = resource['name'].split(".")[0]
-            logger.info("File name: " + file_name)
+        file_name = resource['name'].split(".")[0]
+        logger.info("File name: " + file_name)
 
-            if BBOX is None:
-                segmented_json_mask = segment_anything.generate_mask(file_path)
+        if BBOX is None:
+            segmented_json_mask = segment_anything.generate_mask(file_path)
+        else:
+            segmented_json_mask = segment_anything.generate_prompt_mask(file_path, BBOX)
+
+        # Encode the masks as JSON and upload to dataset
+        json_file_name = file_name + "_mask.json"
+        with open(json_file_name, 'w') as f:
+            json.dump(segmented_json_mask, f, cls=NumpyEncoder)
+
+        #Upload file
+        pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
+        os.remove(json_file_name)
+
+
+        if SAVE_IMAGE:
+            img_file_name = file_name + "_masked.png"
+            if BBOX is not None:
+                segment_anything.save_prompt_output(segmented_json_mask, file_path, img_file_name)
             else:
-                segmented_json_mask = segment_anything.generate_prompt_mask(file_path, BBOX)
+                segment_anything.save_output(segmented_json_mask, file_path, img_file_name)
+            logging.info("Uploading masked image")
+            pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
+            os.remove(img_file_name)
 
-            # Encode the masks as JSON and upload to dataset
-            json_file_name = file_name + "_mask.json"
-            with open(json_file_name, 'w') as f:
-                json.dump(segmented_json_mask, f, cls=NumpyEncoder)
+        logging.warning("Successfully extracted!")
 
-            #Upload file
-            pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
-            os.remove(json_file_name)
-
-
-            if SAVE_IMAGE:
-                img_file_name = file_name + "_masked.png"
-                if BBOX is not None:
-                    segment_anything.save_prompt_output(segmented_json_mask, file_path, img_file_name)
-                else:
-                    segment_anything.save_output(segmented_json_mask, file_path, img_file_name)
-                logging.info("Uploading masked image")
-                pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
-                os.remove(img_file_name)
-
-            logging.warning("Successfully extracted!")
-            return
-        except Exception as e:
-            logging.error(e)
-            logging.warning("Error in running the extractor")
-            return
 
 
 if __name__ == "__main__":
