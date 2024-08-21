@@ -38,7 +38,7 @@ class SegmentAnything:
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         self.predictor.set_image(image_rgb)
         input_box = np.array(bounding_box)
-        masks, _, _ = self.predictor.predict(box=input_box[None, :], multimask_output=False)
+        masks, _, _ = self.predictor.predict(box=input_box, multimask_output=True)
         return masks
 
     def save_prompt_output(self, masks, original_image_path, output_path):
