@@ -44,6 +44,7 @@ class SegmentAnythingFileExtractor(Extractor):
         # Load parameters
         SAVE_IMAGE = True
         BBOX = None
+        output_name = "output"
 
         if 'parameters' in parameters:
             params = None
@@ -52,10 +53,12 @@ class SegmentAnythingFileExtractor(Extractor):
 
             if "SAVE_IMAGE" in params:
                 SAVE_IMAGE = eval(params["SAVE_IMAGE"])
-            if "bbox" in params:
-                BBOX = params["bbox"]
+            if "BBOX" in params:
+                BBOX = params["BBOX"]
                 # convert string to list
                 BBOX = json.loads(BBOX)['boundingBox']
+            if "OUTPUT_NAME" in params:
+                output_name = params["OUTPUT_NAME"]
 
         logging.info("Parameters: " + str(parameters))
 
@@ -70,7 +73,7 @@ class SegmentAnythingFileExtractor(Extractor):
             segmented_json_mask = segment_anything.generate_prompt_mask(file_path, BBOX)
 
         # Encode the masks as JSON and upload to dataset
-        json_file_name = file_name + "_mask.json"
+        json_file_name = output_name + "_mask.json"
         with open(json_file_name, 'w') as f:
             json.dump(segmented_json_mask, f, cls=NumpyEncoder)
 
@@ -80,8 +83,9 @@ class SegmentAnythingFileExtractor(Extractor):
 
         logging.info("User chose to save image- " + str(SAVE_IMAGE))
         if SAVE_IMAGE:
-            img_file_name = file_name + "_masked.png"
+            img_file_name = output_name + "_masked.png"
             if BBOX is not None:
+                logging.info("Saving prompt output")
                 segment_anything.save_prompt_output(segmented_json_mask, file_path, img_file_name)
             else:
                 segment_anything.save_output(segmented_json_mask, file_path, img_file_name)

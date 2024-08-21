@@ -35,6 +35,10 @@
         "type": "string",
         "title": "Annotate image",
         "format": "ImageAnnotator"
+      },
+      "OUTPUT_NAME": {
+        "type": "string",
+        "title": "Output File Name"
       }
     }
   }
