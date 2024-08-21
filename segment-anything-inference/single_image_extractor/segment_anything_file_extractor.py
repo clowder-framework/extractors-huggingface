@@ -57,6 +57,8 @@ class SegmentAnythingFileExtractor(Extractor):
                 BBOX = params["BBOX"]
                 # convert string to list
                 BBOX = json.loads(BBOX)['boundingBox']
+                logging.info("BBOX: " + str(BBOX))
+                logging.info("BBOX type: " + str(type(BBOX)))
             if "OUTPUT_NAME" in params:
                 output_name = params["OUTPUT_NAME"]
 
