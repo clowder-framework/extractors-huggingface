@@ -41,30 +41,15 @@ class SegmentAnything:
         masks, _, _ = self.predictor.predict(box=input_box[None, :], multimask_output=False)
         return masks
 
-    def save_prompt_output(self, masks, original_image_path, output_path, random_color=False):
+    def save_prompt_output(self, masks, original_image_path, output_path):
         original_image = cv2.imread(original_image_path)
         output_image = original_image.copy()
-
         for mask in masks:
-            # Get the height and width from the mask
-            h, w = mask.shape[-2:]
+            color_mask = np.random.randint(0, 256, (1, 3), dtype=np.uint8)
+            output_image[mask == 1] = output_image[mask == 1] * 0.5 + color_mask * 0.5
 
-            if random_color:
-                color = np.concatenate([np.random.randint(0, 256, 3) / 255.0, np.array([0.6])], axis=0)
-            else:
-                color = np.array([30 / 255, 144 / 255, 255 / 255, 0.6])  # Default color
-
-            # Reshape the mask and color mask
-            mask_image = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
-
-            # Ensure mask_image is in the same range as the output image
-            mask_image_bgr = cv2.cvtColor((mask_image * 255).astype('uint8'), cv2.COLOR_RGB2BGR)
-
-            # Blend the mask image with the output image
-            output_image = cv2.addWeighted(output_image, 1.0, mask_image_bgr, 0.5, 0)
-
-        cv2.imwrite(output_path, output_image)
-
+        output_image_bgr = cv2.cvtColor(output_image.astype('uint8'), cv2.COLOR_RGB2BGR)
+        cv2.imwrite(output_path, output_image_bgr)
 
 if __name__ == "__main__":
     segment_anything = SegmentAnything()
