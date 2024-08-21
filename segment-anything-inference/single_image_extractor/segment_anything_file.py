@@ -39,15 +39,15 @@ class SegmentAnything:
         self.predictor.set_image(image_rgb)
         input_box = np.array(bounding_box)
         masks, _, _ = self.predictor.predict(box=input_box[None, :])
-        return masks[0]
+        return masks
 
-    def save_prompt_output(self, mask, original_image_path, output_path):
+    def save_prompt_output(self, masks, original_image_path, output_path):
         original_image = cv2.imread(original_image_path)
         output_image = original_image.copy()
-        random_color = np.random.randint(0, 256, (1, 3), dtype=np.uint8)
-        h, w = mask.shape[-2:]
-        mask_image = mask.reshape(h, w, 1) * random_color.reshape(1, 1, -1)
-        output_image[mask == 1] = output_image[mask == 1] * 0.5 + mask_image[mask == 1] * 0.5
+        for mask in masks:
+            color_mask = np.random.randint(0, 256, (1, 3), dtype=np.uint8)
+            output_image[mask == 1] = output_image[mask == 1] * 0.5 + color_mask * 0.5
+
         output_image_bgr = cv2.cvtColor(output_image.astype('uint8'), cv2.COLOR_RGB2BGR)
         cv2.imwrite(output_path, output_image_bgr)
 
