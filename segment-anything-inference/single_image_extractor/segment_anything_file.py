@@ -37,7 +37,7 @@ class SegmentAnything:
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         self.predictor.set_image(image_rgb)
-        input_box = np.array(bounding_box)
+        input_box = np.array(bounding_box[0], bounding_box[1], bounding_box[0] + bounding_box[2], bounding_box[1] + bounding_box[3])
         masks, _, _ = self.predictor.predict(point_coords = None, point_labels= None,box=input_box[None, :], multimask_output=False)
         return masks
 
