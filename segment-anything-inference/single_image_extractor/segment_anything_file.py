@@ -28,7 +28,7 @@ class SegmentAnything:
         for val in sorted_result:
             mask = val['segmentation']
             color_mask = np.random.randint(0, 256, (1, 3), dtype=np.uint8)
-            output_image[mask == 1] = output_image[mask == 1] * 0.5 + color_mask * 0.5
+            output_image[mask == 1] = output_image[mask == 1] * 0.3 + color_mask * 0.7
 
         cv2.imwrite(output_path, output_image)
 
