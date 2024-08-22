@@ -49,7 +49,7 @@ class SegmentAnything:
             output_image[mask == 1] = output_image[mask == 1] * 0.5 + color_mask * 0.5
 
         output_image_bgr = cv2.cvtColor(output_image.astype('uint8'), cv2.COLOR_RGB2BGR)
-        cv2.imwrite(output_path, output_image_bgr)
+        cv2.imwrite(output_path, output_image)
 
 if __name__ == "__main__":
     segment_anything = SegmentAnything()
