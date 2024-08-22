@@ -30,8 +30,7 @@ class SegmentAnything:
             color_mask = np.random.randint(0, 256, (1, 3), dtype=np.uint8)
             output_image[mask == 1] = output_image[mask == 1] * 0.5 + color_mask * 0.5
 
-        output_image_bgr = cv2.cvtColor(output_image.astype('uint8'), cv2.COLOR_RGB2BGR)
-        cv2.imwrite(output_path, output_image_bgr)
+        cv2.imwrite(output_path, output_image)
 
     def generate_prompt_mask(self, image_path, bounding_box):
         image = cv2.imread(image_path)
