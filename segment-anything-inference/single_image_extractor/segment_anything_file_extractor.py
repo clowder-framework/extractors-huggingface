@@ -85,7 +85,7 @@ class SegmentAnythingFileExtractor(Extractor):
 
         logging.info("User chose to save image- " + str(SAVE_IMAGE))
         if SAVE_IMAGE:
-            img_file_name = output_name + "_masked.png"
+            img_file_name = output_name + ".png"
             if BBOX is not None:
                 logging.info("Saving prompt output")
                 segment_anything.save_prompt_output(segmented_json_masks, file_path, img_file_name)
