@@ -1,0 +1,73 @@
+{
+  "@context": "http://clowder.ncsa.illinois.edu/contexts/extractors.jsonld",
+  "name": "ncsa.clowder-files-sequence-classification-model-finetuner",
+  "version": "1.0",
+  "description": "Chose from a list of huggingface models and finetune them on a clowder training file. The model is then evaluated with a test file. Only for sequence classification tasks.",
+  "author": "Vismayak Mohanarajan",
+  "contributors": [
+  ],
+  "contexts": [],
+  "repository": [
+    {
+      "repType": "git",
+      "repUrl": "https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
+    }
+  ],
+  "process": {
+    "file": [
+      "manual.submission"
+    ]
+  },
+  "max_retry": 1,
+  "external_services": [],
+  "dependencies": [],
+  "bibtex": [],
+  "parameters": {
+      "schema": {
+          "MODEL_NAME": {
+              "type": "string",
+              "title": "Model name",
+              "description": "The name of the Sequence Classification model to use. See https://huggingface.co/models for a list of available models."
+          },
+        "DATA_TYPE": {
+              "type": "string",
+              "title": "Data Type",
+              "description": "The type of data to be used for training. For example, csv or json."
+          },
+        "LOCAL_TRAIN_FILE_ID": {
+              "type": "string",
+              "title": " Training File Clowder ID",
+              "description": "The ClowderID of the file containing the training data.",
+              "format": "ClowderFile",
+              "showOnlyDatasetFiles": true
+          },
+        "LOCAL_TEST_FILE_ID": {
+              "type": "string",
+              "title": "Test File Clowder ID",
+              "description": "The ClowderID of the file containing the test data.",
+              "format": "ClowderFile",
+              "showOnlyDatasetFiles": true
+          },
+        "NUM_LABELS": {
+              "type": "integer",
+              "title": "Number of labels",
+              "description": "The number of labels in the dataset."
+          },
+        "MODEL_FILE_NAME": {
+              "type": "string",
+              "title": "Model File Name",
+              "description": "File name of the fine-tuned model."
+          },
+        "WANDB_API_KEY": {
+              "type": "string",
+              "title": "Weights & Biases Key",
+              "description": "Optional -Weights & Biases API key"
+      },
+        "WANDB_PROJECT_NAME": {
+              "type": "string",
+              "title": "Weights & Biases Project Name",
+              "description": "Optional -Weights & Biases Project Name"
+          }
+    }
+  }
+}

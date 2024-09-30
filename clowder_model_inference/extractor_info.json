@@ -1,0 +1,52 @@
+{
+   "@context":"http://clowder.ncsa.illinois.edu/contexts/extractors.jsonld",
+   "name":"ncsa.clowder-model-inference",
+   "version":"1.0",
+   "description":"Extracts predictions from a trained sequence classification model in Clowder",
+   "author":"Vismayak Mohanarajan",
+   "contributors":[
+   ],
+   "contexts":[
+   ],
+   "repository":[
+      {
+         "repType":"git",
+         "repUrl":"https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
+      }
+   ],
+   "process": {
+    "file": [
+      "text/*"
+    ]
+  },
+   "max_retry":1,
+   "external_services":[
+
+   ],
+   "dependencies":[
+
+   ],
+   "bibtex":[
+
+   ],
+   "parameters":{
+      "schema":{
+         "BASE_MODEL_NAME":{
+            "type":"string",
+            "title":"Model name",
+            "description":"The name of the foundation model used, used to get appropriate tokenizer"
+         },
+         "MODEL_FILE_ID":{
+            "type":"string",
+            "title":"Model file ID",
+            "description":"The Clowder file id of the model file",
+            "format": "ClowderFile"
+         },
+         "PREDICTIONS_FILE_NAME":{
+            "type":"string",
+            "title":"Predictions file name",
+            "description":"The name of the file to store the predictions"
+         }
+      }
+   }
+}
