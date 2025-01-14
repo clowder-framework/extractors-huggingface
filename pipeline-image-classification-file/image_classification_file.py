@@ -33,6 +33,8 @@ class ImageClassification(Extractor):
         file_path = resource["local_paths"][0]
         file_id = resource['id']
 
+        print(f"Processing file {file_id} with path {file_path}")
+
         # Load file
         connector.message_process(resource, "Loading contents of file")
         with Image.open(file_path) as image:

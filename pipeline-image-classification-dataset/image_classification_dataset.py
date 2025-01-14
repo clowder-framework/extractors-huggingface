@@ -10,6 +10,7 @@ from PIL import Image
 import pyclowder.files
 from pyclowder.extractors import Extractor
 from transformers import pipeline
+from pyclowder.utils import CheckMessage
 
 
 @ray.remote
@@ -52,6 +53,9 @@ class ImgExtractor(Extractor):
         logging.getLogger('pyclowder').setLevel(logging.DEBUG)
         logging.getLogger('__main__').setLevel(logging.DEBUG)
 
+    def check_message(self, connector, host, secret_key, resource, parameters):
+        return CheckMessage.bypass
+
     def process_message(self, connector, host, secret_key, resource, parameters):
         """Dataset extractor. We get all filenames at once."""
         logger = logging.getLogger(__name__)
@@ -61,7 +65,8 @@ class ImgExtractor(Extractor):
         localfiles = []
         clowder_version = int(os.getenv('CLOWDER_VERSION', '1'))
 
-        # # Loop through dataset and download all file "locally"
+
+        # Loop through dataset and download all file "locally"
         for file_dict in filelist:
             # Use the correct key depending on the Clowder version
             if clowder_version == 2:
@@ -109,7 +114,7 @@ class ImgExtractor(Extractor):
 if __name__ == "__main__":
     ray_address = os.getenv("RAY_ADDRESS", "ray://127.0.0.1:10001")
     # Run on local ray cluster and install required dependencies
-    ray.init(ray_address, runtime_env={"pip": ["transformers", "torch", "torchvision", "timm"]},
+    ray.init( runtime_env={"pip": ["transformers", "torch", "torchvision", "timm"]},
              )
     extractor = ImgExtractor()
     extractor.start()
