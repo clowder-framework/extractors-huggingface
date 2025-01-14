@@ -32,6 +32,7 @@ class ImageClassification(Extractor):
     def process_message(self, connector, host, secret_key, resource, parameters):
         file_path = resource["local_paths"][0]
         file_id = resource['id']
+        print(f"Processing file {file_id} with path {file_path}")
 
         print(f"Processing file {file_id} with path {file_path}")
 

@@ -21,6 +21,34 @@ Docker flags:
   - You can also use `--link` to link the extractor to a RabbitMQ container.
 - `--name` assigns the container a name visible in Docker Desktop.
 
+
+## When using minio mounting
+
+Docker-compose should follow similar format
+```yaml
+image-classification-file:
+    image: image-classification-file
+    networks:
+      - clowder2
+    restart: unless-stopped
+    environment:
+      MINIO_ENDPOINT: minio-nginx:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_MOUNTED_PATH: /clowderfs
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672/%2F
+      CLOWDER_VERSION: 2
+    privileged: true
+    devices:
+      - /dev/fuse:/dev/fuse
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    depends_on:
+      - minio-nginx
+```
+
 ## Troubleshooting
 **If you run into _any_ trouble**, please reach us out [Slack](https://clowder-software.slack.com/archives/CEAMPH39C).
 
