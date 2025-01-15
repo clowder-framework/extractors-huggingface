@@ -2,6 +2,7 @@
 
 
 import logging
+import time
 
 import ray
 
@@ -58,6 +59,7 @@ class ImgExtractor(Extractor):
 
     def process_message(self, connector, host, secret_key, resource, parameters):
         """Dataset extractor. We get all filenames at once."""
+        start_time = time.monotonic()
         logger = logging.getLogger(__name__)
 
         # Get list of all files in dataset
@@ -107,6 +109,8 @@ class ImgExtractor(Extractor):
             # Upload metadata to original file
             pyclowder.files.upload_metadata(connector, host, secret_key, filelist[i]['id'], metadata)
 
+        time_taken = round(time.monotonic() - start_time, 2)
+        logging.warning("Time taken",time_taken)
         # Finish
         logging.warning("Successfully extracted!")
 
