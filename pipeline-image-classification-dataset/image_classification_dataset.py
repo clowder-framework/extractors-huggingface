@@ -110,7 +110,8 @@ class ImgExtractor(Extractor):
             pyclowder.files.upload_metadata(connector, host, secret_key, filelist[i]['id'], metadata)
 
         time_taken = round(time.monotonic() - start_time, 2)
-        logging.warning("Time taken",time_taken)
+        logging.warning("Time taken")
+        logging.warning(time_taken)
         # Finish
         logging.warning("Successfully extracted!")
 
