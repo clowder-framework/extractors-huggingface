@@ -79,6 +79,7 @@ class SegmentAnythingFileExtractor(Extractor):
         with open(json_file_name, 'w') as f:
             json.dump(segmented_json_masks, f, cls=NumpyEncoder)
 
+        logging.info("Created masked JSON")
         #Upload file
         pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, json_file_name)
         os.remove(json_file_name)
@@ -94,6 +95,9 @@ class SegmentAnythingFileExtractor(Extractor):
             logging.info("Uploading masked image")
             pyclowder.files.upload_to_dataset(connector, host, secret_key, dataset_id, img_file_name)
             os.remove(img_file_name)
+
+        # Remove the original file and mask
+        os.remove(file_path)
 
 
 if __name__ == "__main__":
