@@ -1,0 +1,45 @@
+{
+  "@context": "http://clowder.ncsa.illinois.edu/contexts/extractors.json",
+  "name": "ncsa.segment-anything-extractor",
+  "version": "2.5",
+  "description": "Segment-Anything (from Meta AI) Model Extractor",
+  "author": "Vismayak Mohanarajan",
+  "contexts": [],
+  "repository": [
+    {
+      "repType": "git",
+      "repUrl": "https://opensource.ncsa.illinois.edu/stash/scm/cats/pyclowder.git"
+    }
+  ],
+  "process": {
+    "file": [
+      "manual.submission"
+    ]
+  },
+  "max_retry": 1,
+  "external_services": [],
+  "dependencies": [],
+  "bibtex": [],
+  "parameters": {
+    "schema": {
+      "SAVE_IMAGE": {
+        "type": "string",
+        "title": "Save an image of the inferences as a mask overlaying the input image",
+        "enum": [
+          "True",
+          "False"
+        ],
+        "default": "True"
+      },
+      "BBOX": {
+        "type": "string",
+        "title": "Annotate image",
+        "format": "ImageAnnotator"
+      },
+      "OUTPUT_NAME": {
+        "type": "string",
+        "title": "Output File Name"
+      }
+    }
+  }
+}
