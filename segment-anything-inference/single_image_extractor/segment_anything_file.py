@@ -9,7 +9,7 @@ class SegmentAnything:
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model_type = "vit_h"
         self.sam = sam_model_registry[self.model_type](
-            checkpoint="/taiga/mohanar2/segment-anything/sam_vit_h_4b8939.pth").to(device=self.device)
+            checkpoint="sam_vit_h_4b8939.pth").to(device=self.device)
         print("Gpu Available " + str(torch.cuda.is_available()))
         self.mask_generator = SamAutomaticMaskGenerator(self.sam)
         self.predictor = SamPredictor(self.sam)
